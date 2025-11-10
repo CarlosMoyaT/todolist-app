@@ -18,6 +18,9 @@ public class Main {
         // create the object with the data introduced
         Task t1 = new Task(nameTask, descriptionTask, LocalDateTime.now());
 
+        //show all data about task
+        System.out.println("name task: " + t1.getNameTask() + "\ndescription task: " + t1.getContentTask() + "\ntime of creation: " + t1.getCreationDate());
+
 
 
 
