@@ -34,8 +34,9 @@ public class TaskController {
     @GetMapping("/tasks")
 
     @DeleteMapping("/tasks/{id}")
-    public String deleteTask(@PathVariable String id) {
-
+    public String deleteTask(@PathVariable("id") int id) {
+        tasks.removeIf(task -> task.getId() == id);
+        return "Task deleted with id: " + id;
     }
 
 }
