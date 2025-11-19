@@ -26,7 +26,14 @@ public class TaskService {
 
     public Task updateTask(Long id, Task taskContent) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
-        //updateTask
+        task.setNameTask(taskContent.getNameTask());
+        task.setContentTask(taskContent.getContentTask());
+        task.setCreationDate(taskContent.getCreationDate());
+        return taskRepository.save(task);
+    }
 
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        taskRepository.delete(task);
     }
 }
