@@ -43,6 +43,14 @@ public class Task {
         this.updateDate = LocalDateTime.now();
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getNameTask() {
         return nameTask;
     }
