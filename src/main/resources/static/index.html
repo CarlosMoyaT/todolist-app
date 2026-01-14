@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List app</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="container">
+    <h1>Todo List</h1>
+
+    <form id="taskForm" class="card">
+        <h2>New task</h2>
+
+        <label>Name task:</label>
+        <input type="text" id="nameTask" required maxlength="100">
+
+        <label>Description:</label>
+        <textarea id="contentTask" maxlength="500"></textarea>
+
+        <button type="submit" class="btn-primary">New task</button>
+    </form>
+
+    <h2>Tasks list</h2>
+    <div id="taskList" class="task-list"></div>
+</div>
+
+<script>
+    const API_URL = "/tasks";
+
+
+    document.getElementById("taskForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nameTask = document.getElementById("nameTask").value;
+        const contentTask = document.getElementById("contentTask").value;
+
+        await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nameTask, contentTask })
+        });
+
+        e.target.reset();
+        loadTasks();
+    });
+
+
+    async function loadTasks() {
+        const res = await fetch(API_URL);
+        const tasks = await res.json();
+
+        const taskList = document.getElementById("taskList");
+        taskList.innerHTML = "";
+
+        tasks.forEach(task => {
+            const card = document.createElement("div");
+            card.className = "task-card";
+
+            card.innerHTML = `
+                <h3 class="${task.completed ? "completed" : ""}">${task.nameTask}</h3>
+                <p>${task.contentTask || ""}</p>
+
+                <div class="dates">
+                    <small><b>Creada:</b> ${task.creationDate || ""}</small><br>
+                    <small><b>Actualizada:</b> ${task.updateDate || ""}</small>
+                </div>
+
+                <div class="actions">
+                    <button onclick="toggleComplete(${task.id}, ${task.completed})">
+                        ${task.completed ? "Desmarcar" : "Completar"}
+                    </button>
+
+                    <button class="delete" onclick="deleteTask(${task.id})">
+                        Eliminar
+                    </button>
+                </div>
+            `;
+
+            taskList.appendChild(card);
+        });
+    }
+
+
+    async function toggleComplete(id, currentStatus) {
+        await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ completed: !currentStatus })
+        });
+        loadTasks();
+    }
+
+
+    async function deleteTask(id) {
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        loadTasks();
+    }
+
+
+    loadTasks();
+</script>
+</body>
+</html>
