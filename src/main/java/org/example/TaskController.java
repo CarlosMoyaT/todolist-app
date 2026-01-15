@@ -8,28 +8,26 @@ import java.util.List;
 
 @RequestMapping("/tasks")
 public class TaskController {
-    //build the CRUD
 
-    private List<Task> tasks = new ArrayList<>();
-    private int nextId = 1;
     private final TaskRepository taskRepository;
 
-    public TaskController(List<Task> tasks, TaskRepository taskRepository) {
-        this.tasks = tasks;
+    public TaskController(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     @PostMapping("/tasks")
     public String saveTask(@RequestBody Task task) {
         Task saved = taskRepository.save(task);
-        return "Task saved with id: " + task.getId();
+        return "Task saved with id: " + saved.getId();
     }
 
     @GetMapping("/tasks")
 
+    @PutMapping("/tasks/{id}")
+
     @DeleteMapping("/tasks/{id}")
-    public String deleteTask(@PathVariable("id") int id) {
-        tasks.removeIf(task -> task.getId() == id);
+    public String deleteTask(@PathVariable("id") Long id) {
+        taskRepository.deleteById(id);
         return "Task deleted with id: " + id;
     }
 

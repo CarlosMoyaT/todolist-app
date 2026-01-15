@@ -27,7 +27,7 @@ public class Task {
     @Column
     private boolean completed;
 
-    public Task() {
+    public Task(String nameTask, String descriptionTask, LocalDateTime now) {
 
     }
 
